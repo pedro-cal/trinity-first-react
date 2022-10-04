@@ -1,47 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
+import Product from './Product';
 
-// const arrayExample = ['Diego', 'Malu', 'Alany', 'Vinicius', 'Primo'];
-// console.log(arrayExample);
-
-// const [,menina1,menina2,,] = arrayExample;
-// console.log(menina1);
-// console.log(menina2);
-// const [one,two,three,four,five] = arrayExample;
-// console.log(four);
+// Side-effects - efeitos colaterais (coisas que têm influência ou dependência de fatores externos)
+// useEffect recebe 2 argumentos
+// 1) uma arrow function que vai executar o código que a gente quer
+// 2) um array de dependências (variáveis que o React usa pra controlar quando executar esse código)
 
 function App() {
-   const [flamengoScore, setFlamengoScore] = useState(0);
-   const [botafogoScore, setBotafogoScore] = useState('teste');
+   const [apiProducts, setApiProducts] = useState(false);
 
-   function handleIncreaseFlamengo() {
-      setFlamengoScore(flamengoScore + 1);
-   }
-   function handleIncreaseBotafogo() {
-      setBotafogoScore(botafogoScore + 1);
-   }
+   useEffect(() => {
+      fetch('https://dummyjson.com/products')
+         .then(res => res.json())
+         .then(jsonRes => setApiProducts(jsonRes.products));
+   }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-         <div style={{ display: 'flex' }}>
-            <div>
-               <button
-                  onClick={handleIncreaseFlamengo}
-               >
-                  Flamengo
-               </button>
-               <p>{flamengoScore}</p>            
-            </div>
-            <div>
-               <button
-                  onClick={handleIncreaseBotafogo}
-               >
-                  Botafogo
-               </button>
-               <p>{botafogoScore}</p>            
-            </div>
-         </div>
-      </header>
+    <div>
+      {apiProducts ? apiProducts.map((product) => (
+        <Product productData={product}/>
+      )) : null}
     </div>
   );
 }
